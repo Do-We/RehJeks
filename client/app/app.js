@@ -8,6 +8,7 @@ angular.module('rehjeks', [
   'rehjeks.nav',
   'rehjeks.submit',
   'rehjeks.useroptions',
+  'angular-momentjs',
   'ngAnimate',
   'ui.router'
 ])
@@ -21,12 +22,15 @@ angular.module('rehjeks', [
   })
 })
 
-.config(function($stateProvider, $urlRouterProvider, $httpProvider){
+.config(function($stateProvider, $urlRouterProvider, $httpProvider, $momentProvider){
 
   $urlRouterProvider.otherwise('/solve');
 
-  $stateProvider
+  $momentProvider
+  .asyncLoading(false)
+  .scriptUrl('//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js');
 
+  $stateProvider
   .state('solve', {
     url: '/solve',
     views: {

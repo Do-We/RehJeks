@@ -1,6 +1,7 @@
 
 var mongoose = require('mongoose');
 var Challenge = require('./challengeModel');
+var Solution = require('./../solutions/solutionModel')
 
 
 var localDb = 'mongodb://127.0.0.1:27017/rehjeks';
@@ -8,7 +9,7 @@ var localDb = 'mongodb://127.0.0.1:27017/rehjeks';
 var deployedDb = 'mongodb://heroku_rhmw8v8m:ugiqvmqosj3ed5et4c2o3hh0or@ds127938.mlab.com:27938/heroku_rhmw8v8m';
 var devDb = 'mongodb://heroku_4jtklz9c:rp6b84vg6f1h0qhl7g1ajh9csj@ds127948.mlab.com:27948/heroku_4jtklz9c';
 
-var db = mongoose.connect(devDb);
+var db = mongoose.connect(localDb);
 
 
 // run this command in terminal from root directory to fetch data:   node server/utils/challenges/challengesStubs.js
@@ -77,7 +78,7 @@ var challengeArray = [
   {
     'id': '7',
     'title': 'Subtraction',
-    'prompt': 'Any number that\'s not divisible by 50',
+    'prompt': 'Any number that\'s divisible by 50',
     'text': '50 40 100 150 201 500',
     'difficulty': 'medium',
     'expected': ['50', '100', '150', '500'],
@@ -138,6 +139,7 @@ var challengeArray = [
 
 
 Challenge.remove({}, function(err, data) { return; });
+Solution.remove({}, function(err, data) {return; });
 
 Challenge.collection.insertMany(challengeArray, function(err, row) {
   if (err) {

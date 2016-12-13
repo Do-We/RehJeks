@@ -1,17 +1,19 @@
 <div id='profile'>
   <h1 class="stats-title">{{ username }}'s Stats</h1>
   <hr>
-  <h2>Solved Problems</h2>
-  <div class=''>
-    <h4>Problem Breakdown</h4>
-      <p> Easy: {{user.difficulties.easy}}</p>
-      <p> Medium: {{user.difficulties.medium}}</p>
-      <p> Hard: {{user.difficulties.hard}}</p>
+  <div class='stats-breakdown'>
+  <h2> {{user.points}}pts.</h2>
+    <h4>Solved Challenge Breakdown</h4>
+      <p class="easy"> Easy: {{user.difficulties.easy}}</p>
+      <p class="medium"> Medium: {{user.difficulties.medium}}</p>
+      <p class="hard"> Hard: {{user.difficulties.hard}}</p>
   </div>
+  <hr>
   <div class='solutions-view'>
+    <h1 class="stats-title" style="text-align:center;">Challenges Solved</h1>
   	<!-- <button ng-click='show()'>Show Challenges</button> -->
   	<div class='challenge-blurb' ng-class='{"showing-solution": !show}' ng-click='show=!show' ng-repeat='challenge in user.challenges'>
-      <div class="container row">
+      <div class="row">
         <div class="col col-md-4 col-xs-4 col-lg-4">
           <h3 class="challenge-blurb-title">{{challenge.challenge.title}}</h3>
           <br>
@@ -32,6 +34,7 @@
           </div>
           <div class='col col-xs-6 col-md-6 col-lg-6'>
             <br>
+            <h4 class="challenge-blurb-time">Solved: {{formatTime(challenge.solution.createdAt)}}</h4>
             <h4 class="challenge-blurb-time">Time to solve: {{showTime(challenge.solution.timeToSolve)}}</h4>
      			</div>
         </div>

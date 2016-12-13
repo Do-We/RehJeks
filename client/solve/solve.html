@@ -1,26 +1,27 @@
-<div id="solve-nav">
-  <br>
-  <label id="difficulty">Difficulty:
-    <br>
-    <select name="difficulty" id="difficulty" ng-model="difficulty" ng-change="getAllChallenges()">
-      <option value="">random</option>
-      <option value="easy">easy</option>
-      <option value="medium">medium</option>
-      <option value="hard">hard</option>
-    </select>
-  </label>
-  <br>
-  <br>
-  <button ng-click='getRandom()' class="skip-button">New Challenge</button>
-  <br>
-  <br>
-  <div id="time-left">
-    {{ minutes + ":" + (seconds < 10 ? "0" + seconds : seconds) }}
-  </div>
-</div>
+<div class="row" id='solve'>
 
-<div id='solve'>
-  <div class="challenge-prompt">
+  <div class="col col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 solve-nav">
+    <br>
+    <label id="difficulty">Difficulty:
+      <br>
+      <select name="difficulty" id="difficulty" ng-model="difficulty" ng-change="getAllChallenges()">
+        <option value="">random</option>
+        <option value="easy">easy</option>
+        <option value="medium">medium</option>
+        <option value="hard">hard</option>
+      </select>
+    </label>
+    <br>
+    <br>
+    <button ng-click='getRandom()' class="skip-button">New Challenge</button>
+    <br>
+    <br>
+    <div id="time-left">
+      {{ minutes + ":" + (seconds < 10 ? "0" + seconds : seconds) }}
+    </div>
+  </div>
+
+  <div class="col col-xs-9 col-sm-9 col-md-9 col-lg-9 col-xl-9 challenge-prompt">
     <h3 class="challenge-prompt-title">{{challengeData.title}}</h3>
     <br>
     <p class="challenge-description">{{challengeData.prompt}}</p>
@@ -30,25 +31,35 @@
     <br>
     <h4 class="challenge-expected-label">Expected Matches:</h4>
     <p class="challenge-expected">{{challengeData.expected}}</p>
+
+    <div class="solve-form">
+      <form name="solveForm" ng-submit='submit()'>
+        <input id="regex-attempt" type="text" ng-model='attempt' ng-change="checkRegex()" focus-on-me>
+      </form>
+    </div>
+
+    <br>
+    <div ng-if="success" class="green-box fade fade-slow">
+      Great Job! Press Enter to submit and get a new challenge
+    </div>
+    <div ng-if="failure" class="red-box fade fade-fast">
+      Tests failed! Expected {{ challengeData.expected }}, your RegEx matched {{ attemptMatch || "nothing :(" }}.
+    </div>
+    <div ng-if="showHint" class="show-type-hint fade">
+      (Just Start Typing)
+    </div>
+    <div ng-if="false" class="red-box fade fade-fast">
+      Invalid RegEx!
+    </div>
+  </div>
+  <div ng-if="success && otherSolutions.length" class="fade fade-slow">
+    <h2 class="challenge-blurb-title">Others' Solutions:</h2>
+    <div ng-repeat="solution in otherSolutions">
+      <hr>
+      <p class="challenge-blurb-solution">{{solution.solution}}</p>
+      <p class="challenge-blurb-difficulty">Time to solve: {{showTime(solution.timeToSolve)}}</p>
+      <p class="challenge-blurb-difficulty">({{formatTime(solution.createdAt)}})</p>
+    </div>
   </div>
 
-  <div class="solve-form">
-    <form name="solveForm" ng-submit='submit()'>
-      <input id="regex-attempt" type="text" ng-model='attempt' ng-change="checkRegex()" placeholder="/regexHERE/gi" focus-on-me>
-    </form>
-  </div>
-  <br>
-  <br>
-  <div ng-if="success" class="green-box fade fade-slow">
-    Great Job! Press Enter to submit and get a new challenge
-  </div>
-  <div ng-if="failure" class="red-box fade fade-fast">
-    Tests failed! Expected {{ challengeData.expected }}, your RegEx matched {{ attemptMatch || "nothing :(" }}.
-  </div>
-  <div ng-if="showHint" class="show-type-hint fade">
-    (Just Start Typing)
-  </div>
-  <div ng-if="false" class="red-box fade fade-fast">
-    Invalid RegEx!
-  </div>
 </div>

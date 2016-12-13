@@ -1,7 +1,7 @@
 angular.module('rehjeks.solve', [
   'ngAnimate'
 ])
-.controller('SolveController', function($scope, $interval, Server, $sce, $timeout, $cookies, RegexParser) {
+.controller('SolveController', function($scope, $interval, Server, $sce, $timeout, $cookies, RegexParser, $moment) {
 
   ////////////////////////
   // Internal variables
@@ -45,7 +45,8 @@ angular.module('rehjeks.solve', [
   $scope.minutes = 0;
   $scope.showTypeHint = false;
   $scope.correctAttempt;
-
+  $scope.otherSolutions = [];
+  $scope.showAnswers = false;
 
 
 
@@ -53,6 +54,10 @@ angular.module('rehjeks.solve', [
   // $scope functions
   ////////////////////////
 
+
+  $scope.formatTime = function(timeStr) {
+    return $moment(timeStr).fromNow();
+  };
 
   $scope.checkRegex = function() {
     valid = RegexParser($scope.attempt);
@@ -101,6 +106,7 @@ angular.module('rehjeks.solve', [
     if ($scope.checkSolution()) {
       $scope.timeToSolve = new Date() - challStartTime;
       $scope.success = true;
+      $scope.showOtherAnswers = true;
       $scope.failure = false;
     } else {
       $scope.failure = false;
@@ -120,6 +126,15 @@ angular.module('rehjeks.solve', [
     }
   };
 
+  $scope.showTime = function(timeStr) {
+    return new Date(Number(timeStr)).toUTCString().slice(20,25);
+  }
+
+  $scope.getOtherSolutions = function() {
+    Server.getOtherSolutions($scope)
+    .then(res => $scope.otherSolutions = res.data);
+  };
+
 
   $scope.getRandom = function() {
     Server.getRandom($scope)
@@ -127,6 +142,8 @@ angular.module('rehjeks.solve', [
       $scope.highlightedText = $sce.trustAsHtml(testString);
       $scope.success = false;
       $scope.failure = false;
+      $scope.showAnswers = false;
+      $scope.getOtherSolutions();
       $scope.$broadcast('focusOnMe');
     });
     $scope.attempt = '//gi';
@@ -144,6 +161,7 @@ angular.module('rehjeks.solve', [
     $scope.challengeData = Server.currentChallenge.data;
     $scope.highlightedText = $sce.trustAsHtml(Server.currentChallenge.data.text);
     $scope.attempt = '//gi';
+    $scope.getOtherSolutions();
 
     // Timeout to wait until the page has fully loaded first.
     $timeout(function() {
@@ -151,7 +169,7 @@ angular.module('rehjeks.solve', [
     }, 0);
 
   } else {
-    $scope.getRandom();
+    $scope.getRandom()
   }
 
   // Start Timer

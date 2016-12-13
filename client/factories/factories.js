@@ -6,35 +6,7 @@
 
 
 window.GlobalUser = {};
-window.GlobalUser.username = '';
-window.GlobalUser.userId = '';
 window.GlobalUser.solvedChallenges = [];
-
-var exampleChallengeList = [
-  {
-    id: 1,
-    userId: 1,
-    title: 'challenge number 1',
-    prompt: 'be challenged, breaux',
-    text: 'abcdef',
-    difficulty: 'mega hard',
-    expected: ['a'],
-    answer: '^\\w',
-    cheats: ['something']
-  },
-  {
-    id: 2,
-    userId: 2,
-    title: 'challenge number 2',
-    prompt: 'be super challenged, breaux',
-    text: 'abcdef',
-    difficulty: 'mega hard',
-    expected: ['a'],
-    answer: '^\\w',
-    cheats: ['something']
-  }
-];
-
 
 //////////////////////////////////
 //                              //
@@ -42,12 +14,11 @@ var exampleChallengeList = [
 //                              //
 //////////////////////////////////
 
-//var serverUrl = 'http://localhost:8000'; //Update me with Process.Env.Port?
-
 angular.module('rehjeks.factories', [
   'ngCookies',
   'ngSanitize'
 ])
+
 .factory('Auth', function($http, $location, $window) {
 
   var serverURL = $location.protocol() + '://' + location.host;
@@ -60,14 +31,12 @@ angular.module('rehjeks.factories', [
     })
     .then(
       function(successRes) { //first param = successCallback
-        window.GlobalUser.username = successRes.data.username;
-        window.GlobalUser.userId = successRes.data.userid;
         document.cookie = `username=${successRes.data.username}; userId=${successRes.data.userid};`;
         $scope.loggedin = true;
         return true;
       },
       function(errorRes) { //second param = errorCallback
-        console.log(errorRes);
+        return errorRes;
       }
     );
   };
@@ -89,6 +58,7 @@ angular.module('rehjeks.factories', [
 
 
 })
+
 .factory('Server', function($http, $location, $cookies, $sanitize) {
 
   var serverURL = $location.protocol() + '://' + location.host;
@@ -162,8 +132,6 @@ angular.module('rehjeks.factories', [
     });
   };
 
-
-
   var getChallenge = function(challenge) {
 
         //SET currentChallengeData to returned Data
@@ -171,6 +139,7 @@ angular.module('rehjeks.factories', [
     $location.path('solve');
 
   };
+
 
   var submitUserSolution = function(solution, challengeId, timeToSolve) {
 
@@ -181,7 +150,7 @@ angular.module('rehjeks.factories', [
       timeToSolve: timeToSolve
     };
 
-    $http({
+    return $http({
       method: 'POST',
       url: 'solution',
       data: JSON.stringify(submission)
@@ -214,6 +183,18 @@ angular.module('rehjeks.factories', [
     });
 
   };
+
+  var getOtherSolutions = function($scope) {
+
+    let {challengeData: {id}} = $scope;
+
+    return $http({
+      method: 'GET',
+      url: serverURL + '/solution',
+      params: {challengeId: id, quantity: 5}
+    });
+
+  }
   ///////////////////////////
   //    Factory Interface  //
   ///////////////////////////
@@ -225,7 +206,8 @@ angular.module('rehjeks.factories', [
     getChallenge: getChallenge,
     currentChallenge: currentChallenge,
     submitUserSolution: submitUserSolution,
-    submitNewChallenge: submitNewChallenge
+    submitNewChallenge: submitNewChallenge,
+    getOtherSolutions: getOtherSolutions
   };
 
 })

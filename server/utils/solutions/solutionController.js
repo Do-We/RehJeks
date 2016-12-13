@@ -10,9 +10,9 @@ module.exports.getOtherSolutions = function(req, res) {
   let {query: {username, userId, challengeId, quantity = 10}} = req;
 
   if (challengeId) {
-
+    console.log("challengeId: ", challengeId);
     Solution.find({challengeId: challengeId}).limit(+quantity)
-    .then(data => res.send(data))
+    .then(data => {console.log("solutions: ", data); res.send(data)})
     .catch(err => { res.sendStatus(500); console.log(err); });
 
   } else {
@@ -32,12 +32,12 @@ module.exports.addUserSolution = function(req, res) {
 
   User.findOne(userId ? {id: userId} : {username: username})
   .then(user => Solution.create({
-    userId: user.id,
+    userId: user ? user.id : "anonymous",
     challengeId: challengeId,
     solution: solution,
     timeToSolve: timeToSolve
   }))
-  .then(data => console.log(data))
+  // .then(data => console.log(data))
   .then(something => res.send(200))
   .catch(err => { res.sendStatus(500); console.log(err); });
 

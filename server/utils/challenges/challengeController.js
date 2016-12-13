@@ -109,7 +109,6 @@ module.exports.getSingleChallenge = function(req, res) {
     .skip(rand)
 
     .then(function(challenge) {
-      console.log('challenge after Challenge.find', challenge);
       return checkIfUserAlreadySolved(userId, challenge);
     })
 
