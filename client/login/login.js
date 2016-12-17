@@ -5,7 +5,7 @@ angular.module('rehjeks.login', [])
     $scope.showSignup = false;
     $scope.signin = false;
     $scope.actionTitle = 'Login';
-    $scope.loggedin = document.cookie !== "undefined" && document.cookie !== "";
+    $scope.loggedin = document.cookie !== 'undefined' && document.cookie !== '';
     $scope.loginFailed = false;
 
 
@@ -16,11 +16,11 @@ angular.module('rehjeks.login', [])
     $scope.submit = function() {
       if ($scope.showLogin) {
         Auth.authorize($scope.user, '/login', $scope)
-        .then((resp) => resp.data === "Unauthorized" ? $scope.loginFailed = true : undefined);
-      } else if ($scope.showSignup) {
+        .then((resp) => resp.data === 'Unauthorized' ? $scope.loginFailed = true : undefined);
+      } else if ($scope.showSignup ) {
 
         Auth.authorize($scope.user, '/signup', $scope)
-        .then((resp) => resp.data.slice(0,5) === "Error" ? $scope.loginFailed = true: undefined);
+        .then((resp) => resp.data.slice(0, 5) === 'Error' ? $scope.loginFailed = true : undefined);
       }
       var form = document.getElementsByName('loginForm')[0];
       form.reset();
@@ -41,7 +41,7 @@ angular.module('rehjeks.login', [])
     };
 
     $scope.logout = function() {
-      document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+      document.cookie = 'username=; expires=Thu, 01 Jan 1970 00:00:00 UTC';
       window.GlobalUser.username = '';
       $scope.loggedin = false;
     };

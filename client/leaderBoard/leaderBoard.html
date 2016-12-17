@@ -1,0 +1,47 @@
+<div id="leaderboard">
+  <h3> Leaderboard</h3>
+  <div ng-init="getUsers()" ng-model="leaders">
+    <table>
+      <tr>
+        <th>Ranking</th>
+        <th>User</th>
+        <th>Wins</th>
+        <th>Loses</th>
+        <th>Rating</th>
+      </tr>
+      <tr ng-repeat="user in leaders | limitTo:10">
+        <td>{{$index + 1}}</td>
+        <td>{{user.username}}</td>
+        <td>{{user.wins}}</td>
+        <td>{{user.loses}}</td>
+        <td>{{user.score}}</td>
+      </tr>
+    </table>
+
+  </div>
+  <div ng-if="username" ng-init="getUsers()">
+    <h3> Your Location</h3>
+    <table>
+      <tr>
+        <th>Ranking</th>
+        <th>User</th>
+        <th>Wins</th>
+        <th>Loses</th>
+        <th>Rating</th>
+      </tr>
+      <tr ng-repeat="user in filteredleaders ">
+        <td ng-show="findUser(user)" id="highlightTD">{{user.index + 1}}</td>
+        <td ng-show="findUser(user)" id="highlightTD">{{user.username}}</td>
+        <td ng-show="findUser(user)" id="highlightTD">{{user.wins}}</td>
+        <td ng-show="findUser(user)" id="highlightTD">{{user.loses}}</td>
+        <td ng-show="findUser(user)" id="highlightTD">{{user.score}}</td>
+
+        <td ng-hide="findUser(user)">{{user.index + 1}}</td>
+        <td ng-hide="findUser(user)">{{user.username}}</td>
+        <td ng-hide="findUser(user)">{{user.wins}}</td>
+        <td ng-hide="findUser(user)">{{user.loses}}</td>
+        <td ng-hide="findUser(user)">{{user.score}}</td>
+      </tr>
+    </table>
+  </div>
+</div>

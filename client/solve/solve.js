@@ -11,7 +11,27 @@ angular.module('rehjeks.solve', [
 
   var challStartTime = new Date();
 
+  // Logic to show "Just Start Typing" hint
+  // The idea is only to show this to help new users, so if:
+  //   -the user is logged in
+  //   -the user has begun Typing
+  //   -the user has completed two or more challenges
+  //   -it's been ten seconds since the start of the problem
+        // => don't show the hint
+  // Otherwise, show the hint after a second if the user doesn't get the idea
+  var decideToShowTypingHint = function() {
+    if (window.GlobalUser.solvedChallenges.length > 1
+      || $cookies.get('username')
+      || $scope.attempt !== '//gi'
+      || $scope.seconds >= 10) {
+      return false; 
+    } else if ($scope.seconds >= 2) {
+      return true;
+    }
+  };
 
+  // Increment timer. This is called on an $interval towards the end of this controller module.
+  // Also used to trigger the "Just Start Typing" hint.
   var updateTimer = function(startTime) {
     var now = new Date();
     var secondsElapsed = Math.floor( (now - startTime) / 1000 );
@@ -20,19 +40,8 @@ angular.module('rehjeks.solve', [
     if (!$scope.minutes) {
       $scope.showHint = decideToShowTypingHint();
     }
-  };
+  };   
 
-  var decideToShowTypingHint = function() {
-    if (window.GlobalUser.solvedChallenges.length > 1
-      || $cookies.get('username')
-      || $scope.attempt !== '//gi'
-      || $scope.seconds >= 10) {
-      return false;
-    }
-    else if ($scope.seconds >= 2) {
-      return true;
-    }
-  }
 
   ////////////////////////
   // $scope variables
@@ -66,6 +75,22 @@ angular.module('rehjeks.solve', [
     }
     $scope.regexValid = true;
 
+  };
+  // Check if actual match array matches expected match array
+  var solutionsMatch = function(arr1, arr2) {
+    if (!arr2 || !arr1) {
+      return false;
+    }
+    var i;   
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
+    for (i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== arr2[i]) {
+        return false;
+      }
+    }
+    return true;
   };
 
   $scope.checkSolution = function() {
@@ -110,7 +135,7 @@ angular.module('rehjeks.solve', [
       $scope.failure = false;
     } else {
       $scope.failure = false;
-    };
+    }
 
   };
 
@@ -127,8 +152,8 @@ angular.module('rehjeks.solve', [
   };
 
   $scope.showTime = function(timeStr) {
-    return new Date(Number(timeStr)).toUTCString().slice(20,25);
-  }
+    return new Date(Number(timeStr)).toUTCString().slice(20, 25);
+  };
 
   $scope.getOtherSolutions = function() {
     Server.getOtherSolutions($scope)
@@ -169,10 +194,10 @@ angular.module('rehjeks.solve', [
     }, 0);
 
   } else {
-    $scope.getRandom()
+    $scope.getRandom();
   }
 
-  // Start Timer
+  // Start Timer!
   var solutionClock = $interval(function() {
     updateTimer(challStartTime);
   }, 1000);
@@ -186,23 +211,9 @@ angular.module('rehjeks.solve', [
   return function (scope, element) {
     scope.$on('focusOnMe', function() {
       element[0].focus();
-      element[0].setSelectionRange(1,1);
+      element[0].setSelectionRange(1, 1);
     });
   };
 });
 
-var solutionsMatch = function(arr1, arr2) {
-    if (!arr2 || !arr1) {
-      return false;
-    }
-    var i;
-    if (arr1.length !== arr2.length) {
-      return false;
-    }
-    for (i = 0; i < arr1.length; i++) {
-      if (arr1[i] !== arr2[i]) {
-        return false;
-      }
-    }
-    return true;
-  };
+

@@ -5,17 +5,31 @@ var Solution = require('../solutions/solutionModel');
 
 module.exports.getChallenges = function(req, res) {
   // Returns a list of challenges, if a username or a userId is provided it will be a tuple of the challenges that
-  // the user has solved, and their respective solutions--otherwise, it will be an array of any challenges given the params.
+  // the user has solved, and their respective solutions--otherwise, it will be an array of all challenges given the params.
 
   let {query: {quantity = 10, difficulty, order, username, userId}} = req;
-  if (username || userId) {
+
+  if (username || userId) { // If we are given a username, return a list of challenges that the user has solved and tack on the solutions as well
     let userSolutions;
+    // Find userId based upon username
     User.findOne(username ? {username: username} : {id: userId})
+    // Find all solutions for that user
     .then(user => Solution.find({userId: user.id}))
+    // Store these solutions in userSolutions
     .then(solutions => userSolutions = solutions)
+    // This line and the next one are building a Mongo query
     .then(solutions => solutions.map(solution => `{"id": "${solution.challengeId}"}`))
+    // ...for the challenges that the user has solved
     .then(challengeIds => challengeIds.length ? `{"$or": [${challengeIds.join(', ')}]}` : '{"id": "0"}')
-    .then(challengeQuery => Challenge.find(JSON.parse(challengeQuery)).limit(+quantity))
+    // Query for all the challenges that the user has recorded solutions for
+    .then(challengeQuery => Challenge.find(JSON.parse(challengeQuery))
+    // Find [quantity] maximum problems (default is 10 if not specified)
+    .limit(+quantity))
+    // Make an array of challenge-solution tuple objects that will look like this:
+    // {
+    //   challenge: {challenge object},
+    //   solution: {solution object}
+    // }
     .then(challenges => challenges.map(chal => {
       var solution = userSolutions.filter(sol => sol.challengeId === chal.id)[0];
       return {challenge: chal, solution: solution};
@@ -23,11 +37,14 @@ module.exports.getChallenges = function(req, res) {
     .then(solvedChallenges => res.send(solvedChallenges))
     .catch(err=>console.log(err));
   } else {
+    // Query database for all challenges with a given difficulty (or all difficulties)
     Challenge.find(difficulty ? {difficulty: difficulty} : undefined)
-    .limit(+quantity) // Note: quantity comes in from params as a string, Mongoose needs it as a number
+    // Find [quantity] maximum problems
+    // Note: quantity comes in from params as a string, Mongoose needs it as a number
+    .limit(+quantity)
     .then(data => res.send(data));
   }
-
+ 
 
 };
 
@@ -165,6 +182,7 @@ module.exports.submitNewChallenge = function(req, res) {
 
   // Find the userID of the user at username, then store the challenge with that userID
   User.findOne(username ? {username: username} : userId ? {id: userId} : undefined)
+
   .then((user) => {
     if (user) {
       delete newChallenge.username;
@@ -174,12 +192,35 @@ module.exports.submitNewChallenge = function(req, res) {
     }
     return newChallenge.save();
   })
+
   .then(function(data) {
     res.send(200);
   })
+  
   .catch(function(err) {
     console.log('error while submitting a new challenge:', err);
     res.send(err);
   });
 
 };
+
+// Get random question 
+module.exports.fetchRandomQuestion = function(req, res) {
+  Challenge.find({}, function(err, challenge) {
+      if(err) {
+        res.status(500).send(err);
+      }
+      var index = Math.floor(Math.random() * challenge.length-1);
+      res.send(challenge[index]);
+    }
+  )
+}
+  //different from current grab random question, this has no restrictions
+  
+  // query the database for challenge collection and get total count
+
+  // after the total amount of questions is known,
+
+    // query the database for a challenge by use of 
+    // Math.ceil(math.random * count of collection);
+      // resend back the challenge it found

@@ -4,40 +4,45 @@ angular.module('rehjeks.profile', [
 
 .controller('UserprofileController', function($scope, Server, $cookies, $location, $moment) {
 
-  $scope.user = {};
-  $scope.user.difficulties = {};
-  $scope.user.challenges = [];
-  $scope.user.difficulties.easy = 0;
-  $scope.user.difficulties.medium = 0;
-  $scope.user.difficulties.hard = 0;
-  $scope.username = $cookies.get('username');
-  $scope.user.show = false;
-  $scope.user.points = 0;
+  $scope.user = {
+    username: $cookies.get('username'),
+    difficulties: { // Number of challenges solved at each difficulty (populated later)
+      easy: 0,
+      medium: 0,
+      hard: 0
+    },
+    challenges: [], // Where to store the challenge/solution object tuples when we fetch them
+    points: 0,
+    show: false,
+    score: $cookies.get('userScore')
+  };
 
   $scope.formatTime = function(timeStr) {
     return $moment(timeStr).fromNow();
   };
 
-  // Send us away if we log out while on the page
+  // Watch the cookies and send us away if we log out while on the page
   $scope.$watch(function() {return $cookies.get('username'); }, function(newValue) {
     if (!newValue) {
       $location.path('/solve');
     }
   });
-
+  // Get the challenges the user has solved
 
   $scope.getUserChallenges = function() {
-  	return Server.getUserChallenges($scope, $cookies.get('username'));
+  	return Server.getUserChallenges($scope);
   };
 
   $scope.show = function() {
     return $scope.user.show === !$scope.user.show;
   };
 
+  // Format time to solve (mm:ss)
   $scope.showTime = function(timeStr) {
     return new Date(Number(timeStr)).toUTCString().slice(20,25);
   }
 
+  // Initialize by populating the challenges and calculating the status
   $scope.getUserChallenges()
   .then(function(challenges) {
     $scope.user.challenges.forEach(function(challenge){
@@ -51,12 +56,13 @@ angular.module('rehjeks.profile', [
         $scope.user.difficulties.hard++;
       }
     })
+
+    // Assign point value!
+    let {user: {difficulties: {easy, medium, hard}}} = $scope;
     $scope.user.points = (
-      $scope.user.difficulties.hard * 3
-      + $scope.user.difficulties.medium * 2
-      + $scope.user.difficulties.easy * 1
+      hard * 5
+      + medium * 3
+      + easy * 1
     );
-
   });
-
 });
