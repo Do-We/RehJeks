@@ -39,7 +39,7 @@ module.exports = function(db) {
     title: 'challenge number 2',
     prompt: 'be super challenged, breaux',
     text: 'abcdef',
-    difficulty: 'mega hard',
+    difficulty: 'mega hard', 
     expected: ['a'],
     answer: '^\\w',
     cheats: ['something']

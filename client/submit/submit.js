@@ -4,7 +4,7 @@ angular.module('rehjeks.submit', [])
     let submitData = {};
     //saving blank form as originForm
     $scope.originForm = angular.copy($scope.submitData);
-    $scope.resetForm = function(){
+    $scope.resetForm = function() {
       $scope.submitData = angular.copy($scope.originForm);
       // Assign clear state to modified form
       $scope.submitForm.$setPristine();
@@ -30,15 +30,12 @@ angular.module('rehjeks.submit', [])
 
     $scope.onUpdate = function() {
       if (!!$scope.submitData.answer && !!$scope.submitData.text) {
-
-
-      let regexAnswer = RegexParser($scope.submitData.answer);
-
-      $scope.submitData.expected = function(){
-        let textString = $scope.submitData.text;
-        return textString.match(regexAnswer);
-      }
+        let regexAnswer = RegexParser($scope.submitData.answer);
+        $scope.submitData.expected = function() {
+          let textString = $scope.submitData.text;
+          return textString.match(regexAnswer);
+        };
+      } 
+   
     };
-
-  }
-});
+  });

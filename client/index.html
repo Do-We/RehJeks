@@ -15,8 +15,8 @@
 </head>
 <body ng-app="rehjeks" ng-controller="appController">
 
-    <div ui-view="nav">oops something's wrong</div>
-    <div ui-view="body">sorry that our app isn't loaded</div>
+    <div ui-view="nav"></div>
+    <div ui-view="body">sorry that our app isn't loaded yet</div>
     <script src="lib/angular/angular.js"></script>
     <script src='lib/angular-ui-router/release/angular-ui-router.js'></script>
     <script src='lib/angular-cookies/angular-cookies.js'></script>
@@ -24,6 +24,8 @@
     <script src='lib/angular-sanitize/angular-sanitize.js'></script>
     <script src='lib/moment/moment.js'></script>
     <script src='lib/angular-momentjs/angular-momentjs.js'></script>
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.3.2.js"></script>
+    <script src="//cdn.pubnub.com/sdk/pubnub-angular/pubnub-angular-4.0.2.min.js"></script>
     <script src='login/login.js'></script>
     <script src='solve/solve.js'></script>
     <script src='signup/signup.js'></script>
@@ -33,6 +35,7 @@
     <script src='factories/factories.js'></script>
     <script src='submit/submit.js'></script>
     <script src='useroptions/useroptions.js'></script>
+    <script src='leaderBoard/leaderBoard.js'></script>
     <script src='app/app.js'></script>
 </body>
 </html>

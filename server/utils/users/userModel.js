@@ -8,7 +8,10 @@ var passportLocalMongoose = require('passport-local-mongoose');
 var userSchema = mongoose.Schema({
   id: String,
   username: String,
-  pw: String
+  pw: String,
+  wins: {type: Number, default: 0 },
+  loses: {type: Number, default: 0 },
+  score: {type: Number, default: 50}
 },
 {
   timestamps: true

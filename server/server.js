@@ -9,18 +9,16 @@ var LocalStrategy = require('passport-local').Strategy;
 
 //deployed DB at mongodb://heroku_rhmw8v8m:ugiqvmqosj3ed5et4c2o3hh0or@ds127938.mlab.com:27938/heroku_rhmw8v8m
 
-
-var localDb = 'mongodb://127.0.0.1:27017/rehjeks';
+// For deployment purposes, the db is selected by environmental variables if available.
+// Otherwise we use the local db address.
+var localDb = 'mongodb://elliott:e@ds133378.mlab.com:33378/rehjeks_test';
 var currentDb = process.env.MONGODB_URI || localDb;
 console.log('currentDb is __', currentDb);
 
-
+// Same as the port.
 var PORT = process.env.PORT || 8000;
 
 var db = mongoose.connect(currentDb);
-
-//stub(db);
-//
 
 
 var app = express();
@@ -50,4 +48,4 @@ app.use(express.static(__dirname + './../client'));
 app.listen(PORT, function() {
   console.log('Listening on ', PORT);
 });
-
+ 
