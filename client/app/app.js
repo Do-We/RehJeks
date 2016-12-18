@@ -49,7 +49,7 @@ angular.module('rehjeks', [
             controller: 'NavController'
           },
           "body": {
-            templateUrl: 'landingPage/landingPage.html',
+            templateUrl: 'landingpage/landingPage.html',
             controller: 'landingPageController'
           }
         }
