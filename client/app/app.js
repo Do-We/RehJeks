@@ -1,5 +1,6 @@
 angular.module('rehjeks', [
   'rehjeks.factories',
+  'rehjeks.landingPage',
   'rehjeks.login',
   'rehjeks.signup',
   'rehjeks.challenges',
@@ -8,7 +9,7 @@ angular.module('rehjeks', [
   'rehjeks.nav',
   'rehjeks.submit',
   'rehjeks.useroptions',
-  'rehjeks.leaderboard',
+  'rehjeks.multiplayer',
   'angular-momentjs',
   'ngAnimate',
   'ui.router',
@@ -19,18 +20,18 @@ angular.module('rehjeks', [
 
   .controller('appController', function ($scope, $location) {
     $scope.$on('$stateChangeStart', function (event, newUrl) {
-      if (newUrl.requireAuth && document.cookie === "") {
+      if (newUrl.requireAuth && document.cookie === '') {
         alert('Must Login to view stats!');
-        $location.path('/solve');
+        $location.path('/');
       }
-    })
+    });
   })
 
   //UI router config with associated login and useroptions states for each page
 
   .config(function ($stateProvider, $urlRouterProvider, $httpProvider, $momentProvider) {
     // redirect to /solve if any unrecognized paths are loaded
-    $urlRouterProvider.otherwise('/solve');
+    $urlRouterProvider.otherwise('/');
 
     // this is just setup for angular-momentjs for relative time display
     $momentProvider
@@ -40,14 +41,39 @@ angular.module('rehjeks', [
     // ui-router uses states instead of URLs to determine views. Here we have associated a
     // URL with each state but it's not necessary.
     $stateProvider
-      .state('solve', {
-        url: '/solve',
+      .state('landing', {
+        url: '/',
         views: {
           "nav": {
             templateUrl: 'nav/nav.html',
             controller: 'NavController'
           },
           "body": {
+            templateUrl: 'landingPage/landingPage.html',
+            controller: 'landingPageController'
+          }
+        }
+      })
+      .state('landing.login', {
+        templateUrl: 'login/login.html',
+        controller: 'LoginController',
+        parent: 'landing'
+      })
+      .state('landing.useroptions', {
+        templateUrl: 'useroptions/useroptions.html',
+        controller: 'UserOptionsController',
+        parent: 'landing',
+        requireAuth: true
+      })
+
+      .state('solve', {
+        url: '/solve',
+        views: {
+          'nav': {
+            templateUrl: 'nav/nav.html',
+            controller: 'NavController'
+          },
+          'body': {
             templateUrl: 'solve/solve.html',
             controller: 'SolveController'
           }
@@ -74,11 +100,11 @@ angular.module('rehjeks', [
       .state('challenges', {
         url: '/challenges',
         views: {
-          "nav": {
+          'nav': {
             templateUrl: 'nav/nav.html',
             controller: 'NavController'
           },
-          "body": {
+          'body': {
             templateUrl: 'challenges/challenges.html',
             controller: 'ChallengesController'
           }
@@ -100,11 +126,11 @@ angular.module('rehjeks', [
       .state('submit', {
         url: '/submit',
         views: {
-          "nav": {
+          'nav': {
             templateUrl: 'nav/nav.html',
             controller: 'NavController'
           },
-          "body": {
+          'body': {
             templateUrl: 'submit/submit.html',
             controller: 'SubmitController'
           }
@@ -126,11 +152,11 @@ angular.module('rehjeks', [
         url: '/profile',
         requireAuth: true,
         views: {
-          "nav": {
+          'nav': {
             templateUrl: 'nav/nav.html',
             controller: 'NavController'
           },
-          "body": {
+          'body': {
             templateUrl: 'userprofile/userprofile.html',
             controller: 'UserprofileController'
           }
@@ -147,29 +173,29 @@ angular.module('rehjeks', [
         parent: 'profile'
       })
 
-      .state('leaderboard', {
-        url: '/leaderboard',
+      .state('multiplayer', {
+        url: '/multiplayer',
         views: {
-          "nav": {
+          'nav': {
             templateUrl: 'nav/nav.html',
             controller: 'NavController'
           },
-          "body": {
-            templateUrl: 'leaderBoard/leaderBoard.html',
-            controller: 'leaderBoardController'
+          'body': {
+            templateUrl: 'multiplayer/multiplayer.html',
+            controller: 'multiplayerController'
           }
         }
       })
-      .state('leaderboard.login', {
+      .state('multiplayer.login', {
         templateUrl: 'login/login.html',
         controller: 'LoginController',
-        parent: 'leaderboard'
+        parent: 'multiplayer'
       })
-      .state('leaderboard.useroptions', {
+      .state('multiplayer.useroptions', {
         templateUrl: 'useroptions/useroptions.html',
         controller: 'UserOptionsController',
-        parent: 'leaderboard'
-      })
+        parent: 'multiplayer'
+      });
   })
   // Workaround for "unhandled rejection" inherent to Angular 1.6.0 with ui-router
   .config(['$qProvider', function ($qProvider) {

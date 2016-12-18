@@ -37,7 +37,7 @@ angular.module('rehjeks.factories', [
 
         // Set cookies if login successful!
         document.cookie = `username=${successRes.data.username}; userId=${successRes.data.userid};`;
-        document.cookie = `userScore =${successRes.data.score};`
+        document.cookie = `userScore =${successRes.data.score};`;
         // This will change the "Login" anchor tag in the navbar to your username
         $scope.loggedin = true;
         return true;
@@ -108,10 +108,10 @@ angular.module('rehjeks.factories', [
   };
 
   //store current partner in competition
-  var partner = '';
+  var partner = {};
   var challenge = {};
-  var gameOver = '';
-  var input = '';
+  var gameOver = {};
+  var input = {};
 
   //define function to invite a  user to chat
   var inviteUserInQueue = function(otherUser, challenge) { 
@@ -138,13 +138,13 @@ angular.module('rehjeks.factories', [
         if (p.action === 'join' && p.channel === 'queue' && p.uuid !== $cookies.get('username')) {
         //if no partner
           if (!partner) { 
-           Server.fetchRandomQuestion()
+            Server.fetchRandomQuestion()
               .then( (result) => { 
                 //send message to queue channel with our username and new presences username
-                challenge = result.data;
+                challenge.value = result.data;
                 inviteUserInQueue(p.uuid, challenge); 
               })
-              .catch()
+              .catch();
           //subscribe to new users channel
             subscribe([p.uuid]);
           //unsub from queue
@@ -166,10 +166,10 @@ angular.module('rehjeks.factories', [
           }
         }
         if (m.message.end) {
-          gameOver = m.message.end
+          gameOver.value = m.message.end;
         }
         if (m.message.input) {
-          input = m.message.input
+          input.value = m.message.input;
         }
       }
     });      
@@ -290,8 +290,8 @@ angular.module('rehjeks.factories', [
       method: 'GET',
       url: serverURL + '/vschallenge',
       paramSerializer: '$httpParamSerializerJQLike'
-    })
-  } 
+    });
+  }; 
 
   //SETs currentChallengeData to returned Data
 

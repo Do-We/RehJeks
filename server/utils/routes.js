@@ -12,7 +12,7 @@ module.exports = function (app, express) {
 
   app.get('/challenges', challengeController.getChallenges);
 
-  app.get('/vschallenge', challengeController.fetchRandomQuestion)
+  app.get('/vschallenge', challengeController.fetchRandomChallenge);
 
   app.get('/solution', solutionController.getOtherSolutions);
 
@@ -20,7 +20,7 @@ module.exports = function (app, express) {
 
   app.get('/leaderboard', userController.getUsers);
   
-  ////////////////
+  //////////////// 
   // POST REQUESTS
   ////////////////
 

@@ -1,16 +1,22 @@
-angular.module('rehjeks.leaderboard', [
+angular.module('rehjeks.multiplayer', [
   'ngCookies'
 ])
 
-  .controller('leaderBoardController', function ($scope, Server, $cookies, $sce) {
+  .controller('multiplayerController', function ($scope, Server, $cookies, $sce, PUBNUB, Pubnub, $interval) {
     $scope.username = $cookies.get('username');
     $scope.leaders = [];
     $scope.filteredleaders = [];
+    $scope.incrementTimer = function() {
+      $scope.waitTimer++;
+    };
+  //timer counter for time spent in queue
+    $scope.waitTimer = 0; 
+    $scope.isQueued = false;
 
     $scope.getUsers = function () {
-      //grab all users from the database
+      //grab all users from the database  
       Server.getUsers($scope)
-        .then(function () {
+        .then(function () {  
           var counter = 0;
          //after the promise is returned, sort by user's score
           $scope.leaders.sort(function (a, b) {
@@ -20,7 +26,7 @@ angular.module('rehjeks.leaderboard', [
             item.index = counter;
             // then we increment our counter
             counter++;
-          })
+          });
           //iterate over the now sorted array of objects
           for (var i = 0; i < $scope.leaders.length; i++) {
             //check if current index is equal to current user
@@ -41,17 +47,38 @@ angular.module('rehjeks.leaderboard', [
               return $scope.filteredleaders = $scope.leaders.slice($scope.leaders.length - 10, $scope.leaders.length);
             }
           }
-        })
-    }
+        });
+    };
 
     $scope.findUser = function (user) {
       if (user.username === $scope.username) {
         return true;
       }
-    }
+    };
 
     $scope.$watch(function () { return $cookies.get('username'); }, function () {
       var username = $cookies.get('username');
       $scope.username = username;
     });
-  })
+
+    var stop;
+    
+    $scope.joinOneVsOne = function() {
+      if ($cookies.getAll().username) {
+        PUBNUB.initPubnub();
+        PUBNUB.subscribe(['queue']);
+        stop = $interval($scope.incrementTimer, 1000); 
+        $scope.isQueued = true;
+      //add redirect logic here to go to head to head page
+      }
+    };
+
+    //leaves queue or leaves battle
+    $scope.leaveQueue = function() {
+      Pubnub.unsubscribeAll();
+      $interval.cancel(stop);
+      $scope.waitTimer = 0;
+      $scope.isQueued = false;
+      //redirect to different page
+    };  
+  });

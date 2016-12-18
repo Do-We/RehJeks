@@ -11,6 +11,7 @@ var LocalStrategy = require('passport-local').Strategy;
 
 // For deployment purposes, the db is selected by environmental variables if available.
 // Otherwise we use the local db address.
+// var localDb = 'mongodb://127.0.0.1:27017/rehjeks';
 var localDb = 'mongodb://elliott:e@ds133378.mlab.com:33378/rehjeks_test';
 var currentDb = process.env.MONGODB_URI || localDb;
 console.log('currentDb is __', currentDb);

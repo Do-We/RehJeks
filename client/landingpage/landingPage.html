@@ -1,0 +1,62 @@
+<div id='landingpage' ng-controller='landingPageController' class="container-fluid">
+    <div id="landingRow" class="row">
+        <div class="col col-md-4 col-xs-4 col-lg-4 col-md-offset-1 col-xs-offset-1 col-lg-offset-1 ">
+            <div id="linkColumn">
+                <button id="linkContainer" class="container-fluid"><a class="linkColor" ui-sref="solve">Solve</a></button>
+                <p class="helper"> Solve a Random Challenge</p>
+            </div>
+            <div id="linkColumn">
+                <button id="linkContainer" class="container-fluid"><a class="linkColor" ui-sref="challenges">Challenges</a></button>
+                <p class="helper"> Look at All Challenges</p>
+            </div>
+            <div id="linkColumn">
+                <button id="linkContainer" class="container-fluid"><a class="linkColor" ui-sref="multiplayer">Multiplayer</a></button>
+                <p class="helper"> Challenge Other Users</p>
+            </div>
+            <div id="linkColumn">
+                <button id="linkContainer" class="container-fluid"><a class="linkColor" ui-sref="submit">Submit</a></button>
+                <p class="helper"> Make Your Own Challenge</p>
+            </div>
+        </div>
+        <div class="container-fluid col-md-4 col-xs-4 col-lg-4 col-md-offset-2 col-xs-offset-2 col-lg-offset-2 ">
+            <div ng-show='!loggedIn' ng-controller='LoginController'>
+                <h1> {{actionTitle}}</h1>
+                <div class="login-form">
+                    <form name="loginForm" ng-submit='submit()'>
+                        <label>Username:
+                            <input type='text' ng-model='user.username'>
+                        </label>
+                        <br>
+                        <label>Password:
+                            <input type="password" ng-model='user.password'>
+                        </label>
+                        <br>
+                        <button>{{actionTitle}}</button>
+                    </form>
+                </div>
+                <p ng-show='loginFailed && showLogin' class='red-box'>Login Failed--No account? <span class="switch" ng-click="seeSignup()">Sign up!</span>
+                </p>
+                <p ng-show='loginFailed && showSignup' class='red-box'>Username Exists--Is it you? <span class="switch" ng-click="seeLogin()">Log in!</span>
+                </p>
+                <p ng-show="showLogin && !loginFailed">Don't have an account? <span class="switch" ng-click="seeSignup()">Sign up!</span> </p>
+                <p ng-show="showSignup && !loginFailed">Already have an account? <span class="switch" ng-click="seeLogin()">Log in!</span> </p>
+            </div>
+            <div id="landingProfile" ng-show='loggedIn' ng-controller='UserprofileController'>
+                <div>
+                  <h1 class="stats-title" style="text-align:center">{{ user.username }}'s Stats</h1>
+                  <hr>
+                  <div class='stats-breakdown' >
+                      <h2> {{user.points}}pts.</h2>
+                      <h4>Solved Challenge Breakdown</h4>
+                      <p class="easy"> Easy: {{user.difficulties.easy}}</p>
+                      <p class="medium"> Medium: {{user.difficulties.medium}}</p>
+                      <p class="hard"> Hard: {{user.difficulties.hard}}</p>
+                      <hr>
+                      <h2> Rating</h2>
+                      <h3> {{user.score}} pts. </h3>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,95 @@
+<div class="container-fluid">
+  <div class="row">
+
+    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 pvpContainer" id="versusButton">
+      <div class="row">
+        <div class="row" ng-if='!isQueued'>
+          <div class="col-xs-offset-4 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class='backdrop row leaderboardContainer'>
+
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <button type="button" class="btn joinBattleButton" ng-click="joinOneVsOne()">Join 1v1 Battle!</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div ng-if='isQueued'>
+          <div class="col-xs-offset-4 col-sm-offset-4 col-md-offset-4 col-lg-offset-4 col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class='backdrop row leaderboardContainer'>
+
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="row">
+                  <button type="button" class="btn leaveQueueButton" ng-click="leaveQueue()">Leave Queue</button>
+                </div>
+
+                <div class="row">
+
+                  <p class='text-center'>Time in Queue: {{waitTimer}} seconds</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" id="leaderboard">
+      <div class='backdrop row leaderboardContainer'>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+          <div class='row' ng-init="getUsers()" ng-model="leaders">
+            <h3 class='text-center row'> Leaderboard</h3>
+            <table class='leaderboard row'>
+              <tr>
+                <th>Ranking</th>
+                <th>User</th>
+                <th>Wins</th>
+                <th>Loses</th>
+                <th>Rating</th>
+              </tr>
+              <tr ng-repeat="user in leaders | limitTo:10">
+                <td>{{$index + 1}}</td>
+                <td>{{user.username}}</td>
+                <td>{{user.wins}}</td>
+                <td>{{user.loses}}</td>
+                <td>{{user.score}}</td>
+              </tr>
+            </table>
+
+          </div>
+          <div class='row' ng-if="username" ng-init="getUsers()">
+            <h3 class='text-center row'> Your Rank</h3>
+            <table class='leaderboard row'>
+              <tr>
+                <th>Ranking</th>
+                <th>User</th>
+                <th>Wins</th>
+                <th>Loses</th>
+                <th>Rating</th>
+              </tr>
+              <tr ng-repeat="user in filteredleaders ">
+                <td ng-show="findUser(user)" id="highlightTD">{{user.index + 1}}</td>
+                <td ng-show="findUser(user)" id="highlightTD">{{user.username}}</td>
+                <td ng-show="findUser(user)" id="highlightTD">{{user.wins}}</td>
+                <td ng-show="findUser(user)" id="highlightTD">{{user.loses}}</td>
+                <td ng-show="findUser(user)" id="highlightTD">{{user.score}}</td>
+
+                <td ng-hide="findUser(user)">{{user.index + 1}}</td>
+                <td ng-hide="findUser(user)">{{user.username}}</td>
+                <td ng-hide="findUser(user)">{{user.wins}}</td>
+                <td ng-hide="findUser(user)">{{user.loses}}</td>
+                <td ng-hide="findUser(user)">{{user.score}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>

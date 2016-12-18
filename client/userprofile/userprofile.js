@@ -24,8 +24,12 @@ angular.module('rehjeks.profile', [
   // Watch the cookies and send us away if we log out while on the page
   $scope.$watch(function() {return $cookies.get('username'); }, function(newValue) {
     if (!newValue) {
-      $location.path('/solve');
+      $location.path('/');
     }
+    if(newValue) {
+      $scope.user.username = $cookies.get('username');
+      $scope.user.score = $cookies.get('score') || 0;
+    } 
   });
   // Get the challenges the user has solved
 
